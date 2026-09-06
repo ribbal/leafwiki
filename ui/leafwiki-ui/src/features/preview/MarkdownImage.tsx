@@ -3,8 +3,7 @@ import { withBasePath } from '@/lib/routePath'
 import { useDialogsStore } from '@/stores/dialogs'
 import { useEffect, useMemo, useState } from 'react'
 
-type Props = React.ImgHTMLAttributes<HTMLImageElement> & { node?: unknown }
-type MarkdownImageProps = Omit<Props, 'node'> & {
+type MarkdownImageProps = React.ImgHTMLAttributes<HTMLImageElement> & {
   resolveAssetUrl?: (src: string) => string
 }
 
@@ -34,11 +33,10 @@ export function MarkdownImage({
   src = '',
   style,
   alt,
-  node,
+  width,
   resolveAssetUrl,
   ...rest
-}: MarkdownImageProps & { node?: unknown }) {
-  void node
+}: MarkdownImageProps) {
   const openDialog = useDialogsStore((s) => s.openDialog)
   const resolvedSrc = useMemo(
     () => resolveAssetUrl?.(src) ?? src,
@@ -81,6 +79,12 @@ export function MarkdownImage({
         display: 'inline-block',
         ...style,
         cursor: 'zoom-in',
+        ...(width
+          ? {
+              width,
+              height: 'auto',
+            }
+          : {}),
       }}
       draggable={false}
       {...rest}
